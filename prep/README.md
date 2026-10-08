@@ -9,7 +9,7 @@ Do not commit a real database URL or service secret.
 | Database connection | `node prep/db-test.js` after setting `DATABASE_URL` | Script ready; not run |
 | Render API | `https://sunrise-tuition-api-4h8c.onrender.com/api/health` | Done (`{"status":"ok"}`) |
 | API-to-database | `https://sunrise-tuition-api-4h8c.onrender.com/api/db-check` | Done (database time returned) |
-| Pages-to-API / CORS | `https://khuzairieflex.github.io/TuitionSchoolManagement/` to Render API | CORS preflight verified; current frontend config cache refresh pending |
+| Pages-to-API / CORS | `https://khuzairieflex.github.io/TuitionSchoolManagement/` to Render API | Live frontend loaded seeded data; CORS preflight and 375px layout verified |
 | Secrets | Keep `DATABASE_URL` in the hosting environment; `.env` files are ignored | Repository ready |
 
 The production Neon connection string must remain only in Render environment settings. Rotate its password if it has been shared outside Render.

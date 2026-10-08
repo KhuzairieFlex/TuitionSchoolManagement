@@ -2,7 +2,7 @@
 
 A mobile-ready school management app for maintaining classes, teachers, and students. The repository contains a static frontend, a REST API, PostgreSQL schema and seed data, and deployment-readiness checks.
 
-> The Render API and GitHub Pages frontend are deployed. Health, database connectivity, and API CORS have been verified; full live CRUD and mobile validation remain.
+> The GitHub Pages frontend, Render API, and Neon database are deployed. The live frontend has loaded seeded data, and the API health, database connection, and CORS have been verified. Full live CRUD validation remains.
 
 ## 1. Team
 
@@ -14,8 +14,8 @@ A mobile-ready school management app for maintaining classes, teachers, and stud
 
 | Component | Platform | URL | Status |
 |---|---|---|---|
-| Frontend | GitHub Pages | https://khuzairieflex.github.io/TuitionSchoolManagement/ | Live; final UI checks pending |
-| API | Render | https://sunrise-tuition-api-4h8c.onrender.com/api/health | Live; health returns `{"status":"ok"}` |
+| Frontend | GitHub Pages | [Open Sunrise Tuition Centre](https://khuzairieflex.github.io/TuitionSchoolManagement/) | Live; seeded data loads |
+| API | Render | [Health check](https://sunrise-tuition-api-4h8c.onrender.com/api/health) · [API base URL](https://sunrise-tuition-api-4h8c.onrender.com) | Live; health returns `{"status":"ok"}` |
 | Database | Neon PostgreSQL | Tuition School Management (`production`) | Schema + seed loaded; Render DB check verified |
 
 ## 3. What this app does
@@ -105,23 +105,51 @@ Not recorded yet. Record a 3–5 minute mobile demo after cloud setup and live v
 
 ## 10. Setup & deployment notes
 
+### Local development (development only)
+
+The following local URLs are for development and testing only. The submitted demo uses the HTTPS GitHub Pages and Render URLs above.
+
+Prerequisites: Node.js 20 or newer, npm, and Python 3 (to serve the static frontend).
+
+1. Create a Neon database for development, then run `db/schema.sql` and `db/seed.sql` in its SQL Editor. You may use another PostgreSQL database instead.
+2. In PowerShell, open the API directory and create your local environment file:
+
+   ```powershell
+   Set-Location api
+   Copy-Item .env.example .env
+   ```
+
+3. Edit `api/.env` and replace the placeholder `DATABASE_URL` with your development database connection string. Keep this real value in `.env`; never put it in source control or frontend files.
+4. Install dependencies and start the API:
+
+   ```powershell
+   npm install
+   npm run dev
+   ```
+
+   The API runs at `http://localhost:3000`. The default local frontend origin is `http://localhost:8000`.
+5. In a second PowerShell window, from the repository root, serve the frontend:
+
+   ```powershell
+   py -m http.server 8000 --directory frontend
+   ```
+
+   Open `http://localhost:8000` in your browser. The development API URL is in `frontend/config.js`; the GitHub Pages workflow replaces it with the Render HTTPS URL when publishing.
+6. To run the API tests, open another terminal in `api` and run `npm test`.
+
+Stop the local API and static file server when finished. Do not use these local URLs in the final demo.
+
 ### Environment variables (Render)
 
 | Variable | Purpose |
 |---|---|
 | `DATABASE_URL` | Neon connection URL; configure only in Render environment settings |
-| `CORS_ORIGIN` | Comma-separated GitHub Pages origins |
+| `CORS_ORIGIN` | Allowed browser origin(s); production is `https://khuzairieflex.github.io` |
 | `PORT` | Optional; supplied by Render |
 
-### Local development
+For deployment, create or update the Render service from [`render.yaml`](render.yaml), then set `DATABASE_URL` and `CORS_ORIGIN` in the Render dashboard under **Environment**. Do not commit production credentials, put secrets in GitHub Pages, or add a real database URL to `frontend/config.js`.
 
-1. Create a Neon project and run `db/schema.sql`, then `db/seed.sql`, in its SQL Editor. These were applied to the current `production` branch.
-2. In `api`, copy `.env.example` to `.env`, set `DATABASE_URL`, and run `npm install` then `npm start`.
-3. Set `window.TUITION_API_URL` in `frontend/config.js` to the API URL and serve the `frontend` directory with any static file server.
-4. In Render, create a Blueprint from `render.yaml`; set `DATABASE_URL` and `CORS_ORIGIN` in the service environment. The production CORS origin is `https://khuzairieflex.github.io`.
-5. In the GitHub repository, add the Actions variable `TUITION_API_URL` with the HTTPS Render API base URL (`https://sunrise-tuition-api-4h8c.onrender.com`). Enable GitHub Pages with GitHub Actions, then push to `main` to publish `frontend/`. The workflow substitutes this URL for the local development URL and cache-busts the config script on each deployment.
-
-Local services are for development only. The final demo must use the deployed HTTPS URLs.
+For GitHub Pages, the repository Actions variable `TUITION_API_URL` contains the Render API base URL. The Pages workflow injects that public HTTPS URL into the deployed frontend and cache-busts the configuration script. The production site calls Render; it does not use localhost.
 
 ## 11. Preparation & collaboration
 
@@ -129,7 +157,7 @@ Local services are for development only. The final demo must use the deployed HT
 
 **Offline HTML draft:** `frontend/`
 
-**Environment readiness checks:** See [`prep/README.md`](prep/README.md). Neon SQL, Render health + DB checks, and Pages-to-API CORS are verified. Final data-operation and device checks remain.
+**Environment readiness checks:** See [`prep/README.md`](prep/README.md). Neon SQL, Render health + DB checks, Pages-to-API CORS, and the live 375px layout are verified. Live CRUD checks remain.
 
 ## 12. Vibe-coding log
 
@@ -140,27 +168,27 @@ Local services are for development only. The final demo must use the deployed HT
 - Applied the schema and seed SQL in Neon SQL Editor and verified the expected table counts.
 - Deployed the API to Render and verified `/api/health`, `/api/db-check`, and the GitHub Pages CORS preflight.
 - Published the frontend to GitHub Pages using the workflow API URL variable.
-- Full live CRUD/mobile checks and screenshots/demo recording remain.
+- Full live CRUD checks and screenshots/demo recording remain; the live frontend has loaded seeded data and was checked at 375px.
 
 ## 13. Self-assessment
 
 | Criterion | Status |
 |---|---|
-| GitHub Pages frontend live | Done; final browser/API verification pending |
+| GitHub Pages frontend live | Done; seeded data loads in the live browser |
 | Render API live with CORS | Done; health and preflight verified |
 | Neon schema and seed data loaded | Done; table counts verified |
 | API persists data through Neon | DB connection endpoint verified; CRUD persistence test pending |
 | CRUD implemented for all entities | Implemented; needs live test |
 | Class deletion protection | Implemented; needs live test |
 | Student code suggestion | Implemented; needs live test |
-| 375px layout | Responsive styles implemented; needs device/browser verification |
+| 375px layout | Verified in browser; no horizontal page overflow |
 | No committed secrets | `.env` files ignored; verify before publishing |
-| README and setup notes | Live URLs and deployment notes updated; final evidence pending |
+| README and setup notes | Live URLs, architecture, local development, and environment-variable setup documented |
 | Preparation spikes | Added; Neon, Render health/DB, and CORS checks verified |
 | Submitted by assignment deadline | The deadline in the supplied brief has passed |
 
 ## 14. Known issues / next steps
 
 - Rotate the Neon database password because the connection string was shared in chat, then update Render's `DATABASE_URL`.
-- Confirm the deployed Pages build has loaded the current Render API URL; complete live CRUD, 375px, and accessibility checks.
+- Complete live CRUD and accessibility checks.
 - Capture screenshots and record the 3–5 minute mobile demo; fill in the team and collaboration fields.
