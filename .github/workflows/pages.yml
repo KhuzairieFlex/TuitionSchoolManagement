@@ -48,13 +48,13 @@ jobs:
             fs.writeFileSync(configPath, config.replace("http://localhost:3000", apiUrl));
             const htmlPath = "frontend/index.html";
             const html = fs.readFileSync(htmlPath, "utf8");
-            if (!html.includes('src="./config.js"')) {
+            if (!html.includes("src=\"./config.js\"")) {
               console.error("Could not find the config.js script tag in frontend/index.html.");
               process.exit(1);
             }
             fs.writeFileSync(
               htmlPath,
-              html.replace('src="./config.js"', `src="./config.js?v=${process.env.GITHUB_RUN_ID}"`)
+              html.replace("src=\"./config.js\"", `src="./config.js?v=${process.env.GITHUB_RUN_ID}"`)
             );
           '
       - name: Upload frontend artifact

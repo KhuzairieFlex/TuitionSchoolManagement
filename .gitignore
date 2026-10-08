@@ -5,3 +5,6 @@ node_modules/
 npm-debug.log*
 .DS_Store
 .neon
+.agents/
+.vscode/mcp.json
+skills-lock.json
