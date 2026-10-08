@@ -2,7 +2,7 @@
 
 A mobile-ready school management app for maintaining classes, teachers, and students. The repository contains a static frontend, a REST API, PostgreSQL schema and seed data, and deployment-readiness checks.
 
-> The Neon production database is provisioned and seeded. GitHub Pages and Render have not been deployed yet.
+> The Render API and GitHub Pages frontend are deployed. Health, database connectivity, and API CORS have been verified; full live CRUD and mobile validation remain.
 
 ## 1. Team
 
@@ -14,9 +14,9 @@ A mobile-ready school management app for maintaining classes, teachers, and stud
 
 | Component | Platform | URL | Status |
 |---|---|---|---|
-| Frontend | GitHub Pages | Not deployed | Pending |
-| API | Render | Not deployed | Pending |
-| Database | Neon PostgreSQL | Tuition School Management (`production`) | Schema + seed loaded |
+| Frontend | GitHub Pages | https://khuzairieflex.github.io/TuitionSchoolManagement/ | Live; final UI checks pending |
+| API | Render | https://sunrise-tuition-api-4h8c.onrender.com/api/health | Live; health returns `{"status":"ok"}` |
+| Database | Neon PostgreSQL | Tuition School Management (`production`) | Schema + seed loaded; Render DB check verified |
 
 ## 3. What this app does
 
@@ -55,7 +55,7 @@ prep/           Environment readiness check scripts
 
 ## 5. Features achieved
 
-Implemented in source; cloud deployment and live verification are pending.
+Implemented in source. Cloud deployments are live; run the remaining end-to-end acceptance checks before marking all requirements complete.
 
 - [x] Classes, teachers, and students CRUD flows
 - [x] Student code suggestion using class code and next available sequence
@@ -71,7 +71,7 @@ Implemented in source; cloud deployment and live verification are pending.
 
 ## 6. API reference
 
-Base URL: not deployed. Local development uses `http://localhost:3000`.
+Base URL: `https://sunrise-tuition-api-4h8c.onrender.com`. For local development only, use `http://localhost:3000`.
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -118,8 +118,8 @@ Not recorded yet. Record a 3–5 minute mobile demo after cloud setup and live v
 1. Create a Neon project and run `db/schema.sql`, then `db/seed.sql`, in its SQL Editor. These were applied to the current `production` branch.
 2. In `api`, copy `.env.example` to `.env`, set `DATABASE_URL`, and run `npm install` then `npm start`.
 3. Set `window.TUITION_API_URL` in `frontend/config.js` to the API URL and serve the `frontend` directory with any static file server.
-4. In Render, create a Blueprint from `render.yaml`; set `DATABASE_URL` and `CORS_ORIGIN` in the service environment.
-5. In the GitHub repository, add the Actions variable `TUITION_API_URL` with the HTTPS Render API base URL (for example, `https://sunrise-tuition-api.onrender.com`). Enable GitHub Pages with GitHub Actions, then push to `main` to publish `frontend/`. The workflow substitutes this URL for the local development URL when it builds the Pages artifact.
+4. In Render, create a Blueprint from `render.yaml`; set `DATABASE_URL` and `CORS_ORIGIN` in the service environment. The production CORS origin is `https://khuzairieflex.github.io`.
+5. In the GitHub repository, add the Actions variable `TUITION_API_URL` with the HTTPS Render API base URL (`https://sunrise-tuition-api-4h8c.onrender.com`). Enable GitHub Pages with GitHub Actions, then push to `main` to publish `frontend/`. The workflow substitutes this URL for the local development URL and cache-busts the config script on each deployment.
 
 Local services are for development only. The final demo must use the deployed HTTPS URLs.
 
@@ -129,7 +129,7 @@ Local services are for development only. The final demo must use the deployed HT
 
 **Offline HTML draft:** `frontend/`
 
-**Environment readiness checks:** See [`prep/README.md`](prep/README.md). Neon SQL access and seed verification are complete. API connection, Render deployment, and Pages/CORS checks remain.
+**Environment readiness checks:** See [`prep/README.md`](prep/README.md). Neon SQL, Render health + DB checks, and Pages-to-API CORS are verified. Final data-operation and device checks remain.
 
 ## 12. Vibe-coding log
 
@@ -138,28 +138,29 @@ Local services are for development only. The final demo must use the deployed HT
 - Added API, schema, seed data, and readiness scripts as separate layers.
 - Linked Neon CLI to the `production` branch, initialized an empty `neon.ts` policy, and confirmed `neon deploy` had no policy changes to apply.
 - Applied the schema and seed SQL in Neon SQL Editor and verified the expected table counts.
-- Deployment and cloud account configuration still need to be completed and verified.
+- Deployed the API to Render and verified `/api/health`, `/api/db-check`, and the GitHub Pages CORS preflight.
+- Published the frontend to GitHub Pages using the workflow API URL variable.
+- Full live CRUD/mobile checks and screenshots/demo recording remain.
 
 ## 13. Self-assessment
 
 | Criterion | Status |
 |---|---|
-| GitHub Pages frontend live | Pending |
-| Render API live with CORS | Pending |
+| GitHub Pages frontend live | Done; final browser/API verification pending |
+| Render API live with CORS | Done; health and preflight verified |
 | Neon schema and seed data loaded | Done; table counts verified |
-| API persists data through Neon | Pending Render/API connection test |
+| API persists data through Neon | DB connection endpoint verified; CRUD persistence test pending |
 | CRUD implemented for all entities | Implemented; needs live test |
 | Class deletion protection | Implemented; needs live test |
 | Student code suggestion | Implemented; needs live test |
 | 375px layout | Responsive styles implemented; needs device/browser verification |
 | No committed secrets | `.env` files ignored; verify before publishing |
-| README and setup notes | In progress |
-| Preparation spikes | Added; Neon SQL check complete, remaining checks pending |
+| README and setup notes | Live URLs and deployment notes updated; final evidence pending |
+| Preparation spikes | Added; Neon, Render health/DB, and CORS checks verified |
 | Submitted by assignment deadline | The deadline in the supplied brief has passed |
 
 ## 14. Known issues / next steps
 
-- Connect the API to Neon through Render's `DATABASE_URL` and verify API reads/writes.
-- Deploy the API on Render and set the exact Pages origin for CORS.
-- Set the deployed API URL in `frontend/config.js` and publish on GitHub Pages.
-- Complete mobile, accessibility, API, and CRUD checks; then replace pending README fields with verified evidence.
+- Rotate the Neon database password because the connection string was shared in chat, then update Render's `DATABASE_URL`.
+- Confirm the deployed Pages build has loaded the current Render API URL; complete live CRUD, 375px, and accessibility checks.
+- Capture screenshots and record the 3–5 minute mobile demo; fill in the team and collaboration fields.
